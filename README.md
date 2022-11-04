@@ -9,6 +9,7 @@ Just a small CLI to help me with local Docker environments:
 - It starts a Caddy server and proxy domains to containers.
 
 How? It just read container labels to know what to do.
+Checkout the `docker-compose-sample.yml` in this repository.
 
 ---
 

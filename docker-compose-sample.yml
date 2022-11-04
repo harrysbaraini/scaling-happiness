@@ -1,0 +1,79 @@
+version: '3'
+services:
+    app:
+        build:
+            context: ./.docker/php81
+            dockerfile: Dockerfile
+        image: myproject/php81
+        ports:
+            - '80'
+        volumes:
+            - './vulcan:/var/www/html'
+            - './.docker/php81/Caddyfile:/etc/caddy/Caddyfile'
+        networks:
+            - net
+        depends_on:
+            - database
+            - mailhog
+            - minio
+        labels:
+            com.kirschd.domains: 'myproject.localhost'
+            com.kirschd.cmd.artisan: 'php artisan'
+            com.kirschd.cmd.composer: 'composer'
+            com.kirschd.cmd.npm: 'npm'
+            com.kirschd.cmd.bash: '/bin/bash'
+    database:
+        image: 'mariadb:10.0'
+        ports:
+            - '3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: 'password'
+            MYSQL_ROOT_HOST: "%"
+            MYSQL_DATABASE: 'vulcan'
+            MYSQL_USER: 'vulcan'
+            MYSQL_PASSWORD: 'password'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        volumes:
+            - 'database:/var/lib/mysql'
+        networks:
+            - net
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-ppassword"]
+            retries: 3
+            timeout: 5s
+        labels:
+            com.kirschd.domains: 'db.myproject.localhost'
+    mailhog:
+        image: 'mailhog/mailhog:latest'
+        ports:
+            - '8025'
+        networks:
+            - net
+        labels:
+            kirschd.domain: 'mail.myproject.localhost'
+    minio:
+        image: 'minio/minio:latest'
+        ports:
+            - '8900'
+        environment:
+            MINIO_ROOT_USER: 'minioadmin'
+            MINIO_ROOT_PASSWORD: 'minioadmin'
+        volumes:
+            - 'minio:/data/minio'
+        networks:
+            - net
+        labels:
+            com.kirschd.domains: 'minio.myproject.localhost'
+        command: minio server /data/minio --console-address ":8900"
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+            retries: 3
+            timeout: 5s
+networks:
+    net:
+        driver: bridge
+volumes:
+    database:
+        driver: local
+    minio:
+        driver: local
