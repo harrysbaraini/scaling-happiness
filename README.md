@@ -1,7 +1,31 @@
-oclif-hello-world
+kirschd
 =================
 
-oclif example Hello World CLI
+Kirschd CLI
+
+Just a small CLI to help me with local Docker environments:
+
+- It makes easy to execute commands inside containers.
+- It starts a Caddy server and proxy domains to containers.
+
+How? It just read container labels to know what to do.
+
+---
+
+## Try it!
+
+Clone this repository, `npm install`, `npm run build` and `npm link`.
+
+Start the Caddy server:
+`kirschd start`
+Proxy domains to containers:
+`kirschd wire`
+Run container commands:
+`kirschd c {the-command}`
+
+---
+
+TODO...
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
@@ -16,39 +40,39 @@ oclif example Hello World CLI
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g podboxer
-$ podboxer COMMAND
+$ npm install -g kirschd
+$ kirschd COMMAND
 running command...
-$ podboxer (--version)
-podboxer/0.0.0 darwin-x64 node-v17.7.2
-$ podboxer --help [COMMAND]
+$ kirschd (--version)
+kirschd/0.0.0 darwin-x64 node-v17.7.2
+$ kirschd --help [COMMAND]
 USAGE
-  $ podboxer COMMAND
+  $ kirschd COMMAND
 ...
 ```
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`podboxer hello PERSON`](#podboxer-hello-person)
-* [`podboxer hello world`](#podboxer-hello-world)
-* [`podboxer help [COMMAND]`](#podboxer-help-command)
-* [`podboxer plugins`](#podboxer-plugins)
-* [`podboxer plugins:install PLUGIN...`](#podboxer-pluginsinstall-plugin)
-* [`podboxer plugins:inspect PLUGIN...`](#podboxer-pluginsinspect-plugin)
-* [`podboxer plugins:install PLUGIN...`](#podboxer-pluginsinstall-plugin-1)
-* [`podboxer plugins:link PLUGIN`](#podboxer-pluginslink-plugin)
-* [`podboxer plugins:uninstall PLUGIN...`](#podboxer-pluginsuninstall-plugin)
-* [`podboxer plugins:uninstall PLUGIN...`](#podboxer-pluginsuninstall-plugin-1)
-* [`podboxer plugins:uninstall PLUGIN...`](#podboxer-pluginsuninstall-plugin-2)
-* [`podboxer plugins update`](#podboxer-plugins-update)
+* [`kirschd hello PERSON`](#kirschd-hello-person)
+* [`kirschd hello world`](#kirschd-hello-world)
+* [`kirschd help [COMMAND]`](#kirschd-help-command)
+* [`kirschd plugins`](#kirschd-plugins)
+* [`kirschd plugins:install PLUGIN...`](#kirschd-pluginsinstall-plugin)
+* [`kirschd plugins:inspect PLUGIN...`](#kirschd-pluginsinspect-plugin)
+* [`kirschd plugins:install PLUGIN...`](#kirschd-pluginsinstall-plugin-1)
+* [`kirschd plugins:link PLUGIN`](#kirschd-pluginslink-plugin)
+* [`kirschd plugins:uninstall PLUGIN...`](#kirschd-pluginsuninstall-plugin)
+* [`kirschd plugins:uninstall PLUGIN...`](#kirschd-pluginsuninstall-plugin-1)
+* [`kirschd plugins:uninstall PLUGIN...`](#kirschd-pluginsuninstall-plugin-2)
+* [`kirschd plugins update`](#kirschd-plugins-update)
 
-## `podboxer hello PERSON`
+## `kirschd hello PERSON`
 
 Say hello
 
 ```
 USAGE
-  $ podboxer hello [PERSON] -f <value>
+  $ kirschd hello [PERSON] -f <value>
 
 ARGUMENTS
   PERSON  Person to say hello to
@@ -64,31 +88,31 @@ EXAMPLES
   hello friend from oclif! (./src/commands/hello/index.ts)
 ```
 
-_See code: [dist/commands/hello/index.ts](https://github.com/harrysbaraini/podboxer/blob/v0.0.0/dist/commands/hello/index.ts)_
+_See code: [dist/commands/hello/index.ts](https://github.com/harrysbaraini/kirschd/blob/v0.0.0/dist/commands/hello/index.ts)_
 
-## `podboxer hello world`
+## `kirschd hello world`
 
 Say hello world
 
 ```
 USAGE
-  $ podboxer hello world
+  $ kirschd hello world
 
 DESCRIPTION
   Say hello world
 
 EXAMPLES
-  $ podboxer hello world
+  $ kirschd hello world
   hello world! (./src/commands/hello/world.ts)
 ```
 
-## `podboxer help [COMMAND]`
+## `kirschd help [COMMAND]`
 
-Display help for podboxer.
+Display help for kirschd.
 
 ```
 USAGE
-  $ podboxer help [COMMAND] [-n]
+  $ kirschd help [COMMAND] [-n]
 
 ARGUMENTS
   COMMAND  Command to show help for.
@@ -97,18 +121,18 @@ FLAGS
   -n, --nested-commands  Include all nested commands in the output.
 
 DESCRIPTION
-  Display help for podboxer.
+  Display help for kirschd.
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.15/src/commands/help.ts)_
 
-## `podboxer plugins`
+## `kirschd plugins`
 
 List installed plugins.
 
 ```
 USAGE
-  $ podboxer plugins [--core]
+  $ kirschd plugins [--core]
 
 FLAGS
   --core  Show core plugins.
@@ -117,18 +141,18 @@ DESCRIPTION
   List installed plugins.
 
 EXAMPLES
-  $ podboxer plugins
+  $ kirschd plugins
 ```
 
 _See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.2/src/commands/plugins/index.ts)_
 
-## `podboxer plugins:install PLUGIN...`
+## `kirschd plugins:install PLUGIN...`
 
 Installs a plugin into the CLI.
 
 ```
 USAGE
-  $ podboxer plugins:install PLUGIN...
+  $ kirschd plugins:install PLUGIN...
 
 ARGUMENTS
   PLUGIN  Plugin to install.
@@ -150,23 +174,23 @@ DESCRIPTION
 
 
 ALIASES
-  $ podboxer plugins add
+  $ kirschd plugins add
 
 EXAMPLES
-  $ podboxer plugins:install myplugin 
+  $ kirschd plugins:install myplugin 
 
-  $ podboxer plugins:install https://github.com/someuser/someplugin
+  $ kirschd plugins:install https://github.com/someuser/someplugin
 
-  $ podboxer plugins:install someuser/someplugin
+  $ kirschd plugins:install someuser/someplugin
 ```
 
-## `podboxer plugins:inspect PLUGIN...`
+## `kirschd plugins:inspect PLUGIN...`
 
 Displays installation properties of a plugin.
 
 ```
 USAGE
-  $ podboxer plugins:inspect PLUGIN...
+  $ kirschd plugins:inspect PLUGIN...
 
 ARGUMENTS
   PLUGIN  [default: .] Plugin to inspect.
@@ -179,16 +203,16 @@ DESCRIPTION
   Displays installation properties of a plugin.
 
 EXAMPLES
-  $ podboxer plugins:inspect myplugin
+  $ kirschd plugins:inspect myplugin
 ```
 
-## `podboxer plugins:install PLUGIN...`
+## `kirschd plugins:install PLUGIN...`
 
 Installs a plugin into the CLI.
 
 ```
 USAGE
-  $ podboxer plugins:install PLUGIN...
+  $ kirschd plugins:install PLUGIN...
 
 ARGUMENTS
   PLUGIN  Plugin to install.
@@ -210,23 +234,23 @@ DESCRIPTION
 
 
 ALIASES
-  $ podboxer plugins add
+  $ kirschd plugins add
 
 EXAMPLES
-  $ podboxer plugins:install myplugin 
+  $ kirschd plugins:install myplugin 
 
-  $ podboxer plugins:install https://github.com/someuser/someplugin
+  $ kirschd plugins:install https://github.com/someuser/someplugin
 
-  $ podboxer plugins:install someuser/someplugin
+  $ kirschd plugins:install someuser/someplugin
 ```
 
-## `podboxer plugins:link PLUGIN`
+## `kirschd plugins:link PLUGIN`
 
 Links a plugin into the CLI for development.
 
 ```
 USAGE
-  $ podboxer plugins:link PLUGIN
+  $ kirschd plugins:link PLUGIN
 
 ARGUMENTS
   PATH  [default: .] path to plugin
@@ -244,16 +268,16 @@ DESCRIPTION
 
 
 EXAMPLES
-  $ podboxer plugins:link myplugin
+  $ kirschd plugins:link myplugin
 ```
 
-## `podboxer plugins:uninstall PLUGIN...`
+## `kirschd plugins:uninstall PLUGIN...`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ podboxer plugins:uninstall PLUGIN...
+  $ kirschd plugins:uninstall PLUGIN...
 
 ARGUMENTS
   PLUGIN  plugin to uninstall
@@ -266,17 +290,17 @@ DESCRIPTION
   Removes a plugin from the CLI.
 
 ALIASES
-  $ podboxer plugins unlink
-  $ podboxer plugins remove
+  $ kirschd plugins unlink
+  $ kirschd plugins remove
 ```
 
-## `podboxer plugins:uninstall PLUGIN...`
+## `kirschd plugins:uninstall PLUGIN...`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ podboxer plugins:uninstall PLUGIN...
+  $ kirschd plugins:uninstall PLUGIN...
 
 ARGUMENTS
   PLUGIN  plugin to uninstall
@@ -289,17 +313,17 @@ DESCRIPTION
   Removes a plugin from the CLI.
 
 ALIASES
-  $ podboxer plugins unlink
-  $ podboxer plugins remove
+  $ kirschd plugins unlink
+  $ kirschd plugins remove
 ```
 
-## `podboxer plugins:uninstall PLUGIN...`
+## `kirschd plugins:uninstall PLUGIN...`
 
 Removes a plugin from the CLI.
 
 ```
 USAGE
-  $ podboxer plugins:uninstall PLUGIN...
+  $ kirschd plugins:uninstall PLUGIN...
 
 ARGUMENTS
   PLUGIN  plugin to uninstall
@@ -312,17 +336,17 @@ DESCRIPTION
   Removes a plugin from the CLI.
 
 ALIASES
-  $ podboxer plugins unlink
-  $ podboxer plugins remove
+  $ kirschd plugins unlink
+  $ kirschd plugins remove
 ```
 
-## `podboxer plugins update`
+## `kirschd plugins update`
 
 Update installed plugins.
 
 ```
 USAGE
-  $ podboxer plugins update [-h] [-v]
+  $ kirschd plugins update [-h] [-v]
 
 FLAGS
   -h, --help     Show CLI help.
