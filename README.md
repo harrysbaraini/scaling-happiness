@@ -9,6 +9,7 @@ Just a small CLI to help me with local Docker environments:
 - It starts a Caddy server and proxy domains to containers.
 
 How? It just read container labels to know what to do.
+
 Checkout the `docker-compose-sample.yml` in this repository.
 
 ---
@@ -19,8 +20,10 @@ Clone this repository, `npm install`, `npm run build` and `npm link`.
 
 Start the Caddy server:
 `kirschd start`
+
 Proxy domains to containers:
 `kirschd wire`
+
 Run container commands:
 `kirschd c {the-command}`
 
