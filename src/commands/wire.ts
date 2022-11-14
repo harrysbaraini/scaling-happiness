@@ -35,35 +35,34 @@ export default class Wire extends Command {
         continue
       }
 
-      this.log(`Processing ${container.Names.join('/')} [${container.Id}]`)
+      this.log(`>>> Processing ${container.Names.join('/')} [${container.Id}]`)
 
-      const upstreams = container.Ports
-      .filter((port: Port) => port.PublicPort)
-      .map((port: Port): Dictionary<string> => ({
-        dial: `${port.IP}:${port.PublicPort}`,
-      }))
-
-      const hosts: string[] = []
+      const allUpstreams = container.Ports.filter((port: Port) => port.PublicPort)
 
       for (const domain of container.Labels['com.kirschd.domains'].split(',')) {
-        const host = <string>domain.split('://').pop()
-        if (domain.startsWith('http://')) {
-          httpsSkips.push(host)
+        const hostParts = domain.split('@')
+        const pureDomain = <string>hostParts[0].split('://').pop()
+        if (hostParts[0].startsWith('http://')) {
+          httpsSkips.push(pureDomain)
         }
 
-        hosts.push(host)
-      }
+        const upstreams = hostParts.length > 1
+          ? allUpstreams.filter((up) => up.PrivatePort.toString() === hostParts[1].toString())
+          : [allUpstreams[0]];
 
-      caddyRoutes.push({
-        terminal: true,
-        match: [{host: hosts}],
-        handle: [
-          {
-            handler: 'reverse_proxy',
-            upstreams: upstreams,
-          },
-        ],
-      })
+        this.log(`\t${pureDomain} -> ${upstreams.map(up => `${up.IP}:${up.PublicPort}`)}`)
+
+        caddyRoutes.push({
+          terminal: true,
+          match: [{ host: [pureDomain] }],
+          handle: [
+            {
+              handler: 'reverse_proxy',
+              upstreams: upstreams.map((up) => ({dial: `${up.IP}:${up.PublicPort}`})),
+            }
+          ]
+        })
+      }
     }
 
     const caddyConfig: CaddyConfig = {

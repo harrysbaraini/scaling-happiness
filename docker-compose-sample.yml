@@ -7,6 +7,7 @@ services:
         image: myproject/php81
         ports:
             - '80'
+            - '5173'
         volumes:
             - './vulcan:/var/www/html'
             - './.docker/php81/Caddyfile:/etc/caddy/Caddyfile'
@@ -17,7 +18,7 @@ services:
             - mailhog
             - minio
         labels:
-            com.kirschd.domains: 'myproject.localhost'
+            com.kirschd.domains: 'myproject.localhost@80,vite.myproject.localhost@5173'
             com.kirschd.cmd.artisan: 'php artisan'
             com.kirschd.cmd.composer: 'composer'
             com.kirschd.cmd.npm: 'npm'
