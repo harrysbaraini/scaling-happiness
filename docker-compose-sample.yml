@@ -51,7 +51,7 @@ services:
         networks:
             - net
         labels:
-            kirschd.domain: 'mail.myproject.localhost'
+            com.kirschd.domains: 'mail.myproject.localhost'
     minio:
         image: 'minio/minio:latest'
         ports:
