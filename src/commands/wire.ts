@@ -59,6 +59,13 @@ export default class Wire extends Command {
             {
               handler: 'reverse_proxy',
               upstreams: upstreams.map((up) => ({dial: `${up.IP}:${up.PublicPort}`})),
+              headers: {
+                request: {
+                  set: {
+                    'X-Forwarded-Proto': ['https']
+                  }
+                }
+              }
             }
           ]
         })
