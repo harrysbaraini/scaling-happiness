@@ -1,7 +1,7 @@
 import {Command} from '@oclif/core'
 import {listContainers} from '../utils/docker'
 import {Port} from 'dockerode'
-import {CaddyConfig, CaddyHttpAppRoute} from '../types/caddy'
+import {CaddyCertificate, CaddyConfig, CaddyHttpAppRoute, CaddyTlsPolicy} from '../types/caddy'
 import {Dictionary} from '../types/dictionary'
 import Start from './start'
 import {isRunning, loadConfig} from '../utils/caddy'
@@ -28,6 +28,8 @@ export default class Wire extends Command {
 
     const containers = await listContainers(labels)
     const caddyRoutes: CaddyHttpAppRoute[] = []
+    const caddyCerts: CaddyCertificate[] = []
+    const caddyTlsPolicies: CaddyTlsPolicy[] = []
     const httpsSkips: string[] = []
 
     for (const container of containers) {
@@ -39,11 +41,32 @@ export default class Wire extends Command {
 
       const allUpstreams = container.Ports.filter((port: Port) => port.PublicPort)
 
+      const cert = container.Labels['com.kirschd.cert']
+      if (cert) {
+        const [certFile, certKey] = cert.split(',')
+
+        caddyCerts.push({
+          certificate: certFile,
+          key: certKey,
+          tags: [`cert_${container.Id}`],
+        })
+      }
+
       for (const domain of container.Labels['com.kirschd.domains'].split(',')) {
         const hostParts = domain.split('@')
         const pureDomain = <string>hostParts[0].split('://').pop()
+
         if (hostParts[0].startsWith('http://')) {
           httpsSkips.push(pureDomain)
+        } else {
+          caddyTlsPolicies.push({
+            match: {
+              sni: [pureDomain]
+            },
+            certificate_selection: {
+              any_tag: [`cert_${container.Id}`]
+            }
+          })
         }
 
         const upstreams = hostParts.length > 1
@@ -54,7 +77,7 @@ export default class Wire extends Command {
 
         caddyRoutes.push({
           terminal: true,
-          match: [{ host: [pureDomain] }],
+          match: [{host: [pureDomain]}],
           handle: [
             {
               handler: 'reverse_proxy',
@@ -62,12 +85,13 @@ export default class Wire extends Command {
               headers: {
                 request: {
                   set: {
-                    'X-Forwarded-Proto': ['https']
-                  }
-                }
-              }
-            }
-          ]
+                    'X-Forwarded-Proto': ['https'],
+                    'X-Forwarded-Port': ['443'],
+                  },
+                },
+              },
+            },
+          ],
         })
       }
     }
@@ -75,6 +99,11 @@ export default class Wire extends Command {
     const caddyConfig: CaddyConfig = {
       admin: {listen: '0.0.0.0:2019'},
       apps: {
+        tls: {
+          certificates: {
+            load_files: caddyCerts
+          }
+        },
         http: {
           servers: {
             srv0: {
@@ -84,6 +113,7 @@ export default class Wire extends Command {
                 skip: httpsSkips,
               },
               routes: caddyRoutes,
+              tls_connection_policies: caddyTlsPolicies,
             },
           },
         },
